@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FractalApplication", "FractalApplication\FractalApplication.csproj", "{D1D3CA85-3487-459E-851E-3E2EAF0F4C3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FractalRenderer", "FractalRenderer\FractalRenderer.csproj", "{53C2C679-A011-4F34-B5C0-B7CFD6049C2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
