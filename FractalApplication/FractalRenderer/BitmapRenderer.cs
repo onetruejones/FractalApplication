@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace onetruejones.FractalRenderer
+﻿namespace onetruejones.FractalRenderer
 {
-    public class BitmapRenderer
+    using System.Drawing;
+    using onetruejones.Domain;
+
+    public class BitmapRenderer : IRenderer
     {
         private readonly Bitmap bitmap;
 
         public BitmapRenderer(Bitmap bitmap)
         {
             this.bitmap = bitmap;
+        }
+
+        public void Render(CalculatedGrid calculatedGrid)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
