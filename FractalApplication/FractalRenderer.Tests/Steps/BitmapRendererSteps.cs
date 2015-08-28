@@ -4,6 +4,7 @@ using onetruejones.FractalRenderer;
 
 namespace FractalRenderer.Tests.Steps
 {
+    using FluentAssertions;
     using onetruejones.Domain;
     using TechTalk.SpecFlow;
 
@@ -41,6 +42,25 @@ namespace FractalRenderer.Tests.Steps
         public void GivenACalculatedGridOfWidthAndHeight(int width, int height)
         {
             context.CalculatedGrid = new CalculatedGrid(width, height);
+        }
+
+        [Given(@"the calculated grid has a value of (.*) in position (.*), (.*)")]
+        public void GivenTheCalculatedGridHasAValueOfInPosition(int gridValue, int x, int y)
+        {
+            context.CalculatedGrid[x, y] = gridValue;
+        }
+
+        [When(@"I render the bitmap from the grid data")]
+        public void WhenIRenderTheBitmapFromTheGridData()
+        {
+            context.BitmapRenderer = new BitmapRenderer();
+            context.BitmapRenderer.Render(context.Bitmap, context.CalculatedGrid, context.ColourTable);
+        }
+
+        [Then(@"the bitmap pixel at (.*), (.*) has the colour at position (.*) in the colour table")]
+        public void ThenTheBitmapPixelAtHasTheColourAtPositionInTheColourTable(int x, int y, int colourIndex)
+        {
+            context.Bitmap.GetPixel(x, y).Should().Be(context.ColourTable[colourIndex]);
         }
     }
 }

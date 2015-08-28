@@ -10,5 +10,6 @@ namespace FractalRenderer.Tests.Contexts
         public Bitmap Bitmap { get; set; }
         public ColourTable ColourTable { get; set; }
         public CalculatedGrid CalculatedGrid { get; set; }
+        public BitmapRenderer BitmapRenderer { get; set; }
     }
 }

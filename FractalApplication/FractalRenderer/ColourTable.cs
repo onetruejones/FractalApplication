@@ -7,27 +7,33 @@
 
     public class ColourTable
     {
-        private readonly int steps;
+        public int Steps { get; private set; }
         private readonly List<Color> colorList;
         public Color StartColor { get; set; }
         public Color EndColor { get; set; }
 
         public ColourTable(int steps)
         {
-            this.steps = steps;
+            Steps = steps;
             colorList = new List<Color>();
         }
 
         public void SetupColourTable()
         {
-            var redRange = Maths.IntRange(steps, StartColor.R, EndColor.R).ToArray();
-            var greenRange = Maths.IntRange(steps, StartColor.R, EndColor.G).ToArray();
-            var blueRange = Maths.IntRange(steps, StartColor.R, EndColor.B).ToArray();
-            var i = 0;
-            foreach (var red in redRange)
+            var redRange = Maths.IntRange(Steps, StartColor.R, EndColor.R).ToArray();
+            var greenRange = Maths.IntRange(Steps, StartColor.R, EndColor.G).ToArray();
+            var blueRange = Maths.IntRange(Steps, StartColor.R, EndColor.B).ToArray();
+            for (var j = 0; j < Steps; j++)
             {
-                colorList.Add(Color.FromArgb(redRange[i], blueRange[i], greenRange[i]));
-                i++;
+                colorList.Add(Color.FromArgb(redRange[j], blueRange[j], greenRange[j]));
+            }
+        }
+
+        public Color this[int i]
+        {
+            get
+            {
+                return colorList[i];
             }
         }
     }
