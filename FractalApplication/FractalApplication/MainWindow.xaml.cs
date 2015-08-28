@@ -16,6 +16,9 @@ namespace onetruejones.FractalApplication
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int width = 550;
+        private int height = 400;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,31 +26,30 @@ namespace onetruejones.FractalApplication
 
         private void BtnRender_Click(object sender, RoutedEventArgs e)
         {
-            var colourTable = new ColourTable(124) { StartColor = Color.FromArgb(0, 0, 0, 255), EndColor = Color.FromArgb(255, 255, 255, 255)};
+            var colourSteps = 25;
+            double ratio = (double)width / height;
+            var fractalIterator = new FractalIterator(new FractalPlane(width, height, new PointD(-2.1, -1.2), new PointD(0.9, 1.2)), 150);
+
+            var grid = fractalIterator.IterateFractalPlane();
+
+            var colourTable = new ColourTable(colourSteps) { StartColor = Color.FromArgb(0, 0, 0, 0), EndColor = Color.FromArgb(145, 255, 158, 0) };
             colourTable.SetupColourTable();
-            var calculatedGrid = new CalculatedGrid(124, 124);
-            for (int i = 0; i < 124; i++)
-            {
-                for (int j = 0; j < 124; j++)
-                {
-                    calculatedGrid[i, j] = i;
-                }
-            }
-            var bitmap = new Bitmap(124, 124);
+
+            var bitmap = new Bitmap(width, height);
 
             var bitmapRenderer = new BitmapRenderer();
-            bitmapRenderer.Render(bitmap, calculatedGrid, colourTable);
+            bitmapRenderer.Render(bitmap, grid, colourTable);
 
             DisplayBitmap(bitmap);
         }
 
-        private void DisplayBitmap(Bitmap bitmap)
+        private void DisplayBitmap(Image bitmap)
         {
-            using (MemoryStream memory = new MemoryStream())
+            using (var memory = new MemoryStream())
             {
                 bitmap.Save(memory, ImageFormat.Png);
                 memory.Position = 0;
-                BitmapImage bitmapImage = new BitmapImage();
+                var bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
                 bitmapImage.StreamSource = memory;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;

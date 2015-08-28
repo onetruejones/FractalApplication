@@ -33,7 +33,7 @@
         {
             get
             {
-                return colorList[i];
+                return colorList[i % colorList.Count];
             }
         }
     }

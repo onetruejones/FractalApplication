@@ -1,18 +1,12 @@
 ﻿namespace onetruejones.Domain
 {
-    using System;
-
     public class CalculatedGrid
     {
-        private readonly int width;
-        private readonly int height;
         private readonly int[,] iterationArray;
 
         public CalculatedGrid(int width, int height)
         {
-            this.width = width;
-            this.height = height;
-            iterationArray = new int[this.width, this.height];
+            iterationArray = new int[width, height];
         }
 
         public int this[int x, int y]

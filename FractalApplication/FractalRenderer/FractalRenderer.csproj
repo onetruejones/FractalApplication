@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BitmapRenderer.cs" />
     <Compile Include="ColourTable.cs" />
+    <Compile Include="FractalIterator.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
