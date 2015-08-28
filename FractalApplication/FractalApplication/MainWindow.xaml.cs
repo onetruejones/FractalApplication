@@ -17,7 +17,7 @@ namespace onetruejones.FractalApplication
     public partial class MainWindow : Window
     {
         private int width = 550;
-        private int height = 400;
+        private int height = 410;
 
         public MainWindow()
         {
@@ -28,7 +28,13 @@ namespace onetruejones.FractalApplication
         {
             var colourSteps = 25;
             double ratio = (double)width / height;
-            var fractalIterator = new FractalIterator(new FractalPlane(width, height, new PointD(-2.1, -1.2), new PointD(0.9, 1.2)), 150);
+
+            double planeLength = 0.9 + 2.1;
+            double planeHeight = planeLength / ratio;
+
+            var topLeft = new PointD(-2.2, -1.1);
+            var bottomRight = new PointD(topLeft.X + planeLength, topLeft.Y + planeHeight);
+            var fractalIterator = new FractalIterator(new FractalPlane(width, height, topLeft, bottomRight), 150);
 
             var grid = fractalIterator.IterateFractalPlane();
 
