@@ -5,6 +5,6 @@
 
     public interface IRenderer
     {
-        void Render(Bitmap bitmap, CalculatedGrid calculatedGrid, ColourTable colourTable);
+        void Render(Bitmap bitmap, CalculatedGrid calculatedGrid, ColourTable colourTable, int maximumIterations);
     }
 }

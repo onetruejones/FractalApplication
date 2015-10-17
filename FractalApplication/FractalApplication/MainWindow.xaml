@@ -8,6 +8,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Image Width="Auto" Height="Auto" x:Name="RenderTarget"></Image>
+        <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" Content="Test Colour" Margin="3" VerticalAlignment="Center" x:Name="CheckTest"></CheckBox>
         <Button Grid.Column="0" Grid.Row="1" MinWidth="80" HorizontalAlignment="Right" Margin="3" Content="Render" x:Name="BtnRender" Click="BtnRender_Click"></Button>
     </Grid>
 </Window>

@@ -1,8 +1,8 @@
 ﻿namespace onetruejones.FractalRenderer
 {
-    using onetruejones.Domain;
+    using Domain;
 
-    public class FractalIterator
+    public class FractalIterator : IIterator
     {
         private readonly FractalPlane fractalPlane;
         private readonly int maximumIterations;

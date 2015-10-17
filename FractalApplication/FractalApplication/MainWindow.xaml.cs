@@ -5,10 +5,9 @@ namespace onetruejones.FractalApplication
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
-    using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using onetruejones.Domain;
-    using onetruejones.FractalRenderer;
+    using Domain;
+    using FractalRenderer;
     using Color = System.Drawing.Color;
 
     /// <summary>
@@ -18,6 +17,8 @@ namespace onetruejones.FractalApplication
     {
         private int width = 550;
         private int height = 410;
+        private IIterator iterator;
+        private int maximumIterations = 150;
 
         public MainWindow()
         {
@@ -26,7 +27,6 @@ namespace onetruejones.FractalApplication
 
         private void BtnRender_Click(object sender, RoutedEventArgs e)
         {
-            var colourSteps = 25;
             double ratio = (double)width / height;
 
             double planeLength = 0.9 + 2.1;
@@ -34,26 +34,32 @@ namespace onetruejones.FractalApplication
 
             var topLeft = new PointD(-2.2, -1.1);
             var bottomRight = new PointD(topLeft.X + planeLength, topLeft.Y + planeHeight);
-            var fractalIterator = new FractalIterator(new FractalPlane(width, height, topLeft, bottomRight), 150);
+            iterator = GetIterator(topLeft, bottomRight);
 
-            var grid = fractalIterator.IterateFractalPlane();
+            var grid = iterator.IterateFractalPlane();
 
-            var colourTable = new ColourTable(colourSteps) { StartColor = Color.FromArgb(0, 0, 0, 0), EndColor = Color.FromArgb(145, 255, 158, 0) };
+            var colourTable = new ColourTable(maximumIterations) { StartColor = Color.Black, EndColor = Color.FromArgb(255, 255, 0, 255) };
             colourTable.SetupColourTable();
 
             var bitmap = new Bitmap(width, height);
 
             var bitmapRenderer = new BitmapRenderer();
-            bitmapRenderer.Render(bitmap, grid, colourTable);
+            bitmapRenderer.Render(bitmap, grid, colourTable, maximumIterations);
 
             DisplayBitmap(bitmap);
+        }
+
+        private IIterator GetIterator(PointD topLeft, PointD bottomRight)
+        {
+//            return new TestIterator(new FractalPlane(width, height, topLeft, bottomRight), 25);   
+            return new FractalIterator(new FractalPlane(width, height, topLeft, bottomRight), maximumIterations);
         }
 
         private void DisplayBitmap(Image bitmap)
         {
             using (var memory = new MemoryStream())
             {
-                bitmap.Save(memory, ImageFormat.Png);
+                bitmap.Save(memory, ImageFormat.Bmp);
                 memory.Position = 0;
                 var bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();

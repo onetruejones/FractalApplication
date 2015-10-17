@@ -25,7 +25,7 @@
             var blueRange = Maths.IntRange(Steps, StartColor.R, EndColor.B).ToArray();
             for (var j = 0; j < Steps; j++)
             {
-                colorList.Add(Color.FromArgb(redRange[j], blueRange[j], greenRange[j]));
+                colorList.Add(Color.FromArgb(255, redRange[j], greenRange[j], blueRange[j]));
             }
         }
 
