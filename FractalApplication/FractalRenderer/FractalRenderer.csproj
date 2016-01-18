@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="BitmapRenderer.cs" />
     <Compile Include="ColourTable.cs" />
+    <Compile Include="EscapeCalculator.cs" />
     <Compile Include="FractalIterator.cs" />
+    <Compile Include="IEscapeCalculator.cs" />
     <Compile Include="IIterator.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

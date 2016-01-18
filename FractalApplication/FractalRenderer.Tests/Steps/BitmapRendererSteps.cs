@@ -54,7 +54,7 @@ namespace FractalRenderer.Tests.Steps
         public void WhenIRenderTheBitmapFromTheGridData()
         {
             context.BitmapRenderer = new BitmapRenderer();
-            context.BitmapRenderer.Render(context.Bitmap, context.CalculatedGrid, context.ColourTable);
+            context.BitmapRenderer.Render(context.Bitmap, context.CalculatedGrid, context.ColourTable, 10);
         }
 
         [Then(@"the bitmap pixel at (.*), (.*) has the colour at position (.*) in the colour table")]

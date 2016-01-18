@@ -1,7 +1,7 @@
 ﻿namespace onetruejones.FractalRenderer
 {
     using System.Drawing;
-    using onetruejones.Domain;
+    using Domain;
 
     public class BitmapRenderer : IRenderer
     {
