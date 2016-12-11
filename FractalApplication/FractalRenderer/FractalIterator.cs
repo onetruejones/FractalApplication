@@ -19,11 +19,9 @@
 
         public CalculatedGrid IterateFractalPlane()
         {
-//            var calculatedGrid = new CalculatedGrid(fractalPlane.Width, fractalPlane.Height);
-
-            for (int x = 0; x < fractalPlane.Width; x++)
+            for (var x = 0; x < fractalPlane.Width; x++)
             {
-                for (int y = 0; y < fractalPlane.Height; y++)
+                for (var y = 0; y < fractalPlane.Height; y++)
                 {
                     calculatedGrid[x, y] = escapeCalculator.Iterations(fractalPlane[x, y], maximumIterations);
                 }

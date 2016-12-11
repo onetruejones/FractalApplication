@@ -5,9 +5,14 @@
 
     public class Maths
     {
-        public static IEnumerable<double> DoubleRange(int steps, double min, double max)
+        public static double[] DoubleRange(int steps, double min, double max)
         {
-            return Enumerable.Range(0, steps).Select(i => min + (max - min) * ((double)i / (steps - 1)));
+            return Enumerable.Range(0, steps).Select(i => min + (max - min) * ((double)i / (steps - 1))).ToArray();
+        }
+
+        public static float[] FloatRange(int steps, float min, float max)
+        {
+            return Enumerable.Range(0, steps).Select(i => min + (max - min)*((float) i/(steps - 1))).ToArray();
         }
 
         public static IEnumerable<int> IntRange(int steps, int min, int max)

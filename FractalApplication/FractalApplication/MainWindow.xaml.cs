@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using onetruejones.FractalRenderer.Model;
+using onetruejones.FractalRenderer.ViewModel;
 
 namespace onetruejones.FractalApplication
 {
@@ -12,7 +13,6 @@ namespace onetruejones.FractalApplication
     using System.Windows.Media.Imaging;
     using Domain;
     using FractalRenderer;
-    using Color = System.Drawing.Color;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -25,23 +25,36 @@ namespace onetruejones.FractalApplication
         private int maximumIterations;
         private CalculatedGrid calculatedGrid;
         private ColourTable colourTable;
+        private readonly FractalViewModel viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            viewModel = new FractalViewModel(new FractalModel(new EscapeCalculator()), Application.Current.Dispatcher);
+            
+            DataContext = viewModel;
+            RenderTarget.Width = width;
+            RenderTarget.Height = height;
         }
 
-        private async void BtnRender_Click(object sender, RoutedEventArgs e)
+        private void BtnRender_Click(object sender, RoutedEventArgs e)
         {
-            BtnRender.Content = "Rendering";
-            BtnRender.IsEnabled = false;
+//            BtnRender.Content = "Rendering";
+//            BtnRender.IsEnabled = false;
 //            height = (int)RenderTarget.ActualHeight;
 //            width = (int) RenderTarget.ActualWidth;
 //            var renderSize = GetElementPixelSize(RenderTarget);
 //            width = (int)renderSize.Width;
 //            height = (int) renderSize.Height;
 
-            await RenderYeFractal();
+//            await RenderYeFractal();
+
+            var bitmap = viewModel.Render();
+            DisplayBitmap(bitmap, RenderTarget);
+
+//            BtnRender.Content = "Render";
+//            BtnRender.IsEnabled = true;
         }
 
         public System.Windows.Size GetElementPixelSize(UIElement element)
@@ -49,65 +62,23 @@ namespace onetruejones.FractalApplication
             Matrix transformToDevice;
             var source = PresentationSource.FromVisual(element);
             if (source != null)
+            {
                 transformToDevice = source.CompositionTarget.TransformToDevice;
+            }
             else
+            {
                 using (var newSource = new HwndSource(new HwndSourceParameters()))
                 {
                     transformToDevice = newSource.CompositionTarget.TransformToDevice;
                 }
-                    
+            }
 
             if (element.DesiredSize == new System.Windows.Size())
+            {
                 element.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+            }
 
             return (System.Windows.Size)transformToDevice.Transform((Vector)element.DesiredSize);
-        }
-        private async Task RenderYeFractal()
-        {
-            maximumIterations = int.Parse(TxtMaximumIterations.Text);
-            await Task.Run(() =>
-            {
-                SetUpColourTable();
-
-                iterator = GetIterator();
-                iterator.IterateFractalPlane();
-
-            });
-            DisplayBitmap(RenderBitmap(), RenderTarget);
-
-            BtnRender.Content = "Render";
-            BtnRender.IsEnabled = true;
-        }
-
-        private Bitmap RenderBitmap()
-        {
-            var bitmap = new Bitmap(width, height);
-            new BitmapRenderer().Render(bitmap, calculatedGrid, colourTable, maximumIterations);
-            return bitmap;
-        }
-
-        private void SetUpColourTable()
-        {
-            colourTable = new ColourTable(maximumIterations)
-            {
-                StartColor = Color.Black,
-                EndColor = Color.FromArgb(255, 255, 0, 255)
-            };
-            colourTable.SetupColourTable();
-        }
-
-        private IIterator GetIterator()
-        {
-//            return new TestIterator(new FractalPlane(width, height, topLeft, bottomRight), 25);   
-            double ratio = (double)width / height;
-            double planeLength = 0.9 + 2.1;
-            double planeHeight = planeLength / ratio;
-
-            var topLeft = new PointD(-2.2, -1.1);
-            var bottomRight = new PointD(topLeft.X + planeLength, topLeft.Y + planeHeight);
-            var fractalPlane = new FractalPlane(width, height, topLeft, bottomRight);
-            calculatedGrid = new CalculatedGrid(fractalPlane.Width, fractalPlane.Height);
-            return new FractalIterator(fractalPlane, maximumIterations, new EscapeCalculator(), calculatedGrid);
         }
 
         private void DisplayBitmap(Image bitmap, System.Windows.Controls.Image renderTarget)
@@ -135,6 +106,55 @@ namespace onetruejones.FractalApplication
 
             width = (int) image.ActualWidth;
             height = (int) image.ActualHeight;
+        }
+
+        private void RenderTarget_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var mouseClickPointOnScreen = GetMouseClickPointOnScreen(e);
+            var topLeft = RenderTarget.PointToScreen(new System.Windows.Point(0, 0));
+            var point = new System.Windows.Point(mouseClickPointOnScreen.X - topLeft.X, mouseClickPointOnScreen.Y - topLeft.Y);
+            var worldCoordinates = viewModel.GetWorldCoordinates(GetTargetWidth(), GetTargetHeight(), point);
+
+            viewModel.ViewWidth = viewModel.ViewWidth/2;
+            viewModel.ViewHeight = viewModel.ViewHeight/2;
+            viewModel.Origin = worldCoordinates;
+
+            var bitmap = viewModel.Render();
+            DisplayBitmap(bitmap, RenderTarget);
+
+        }
+
+        private System.Windows.Point GetMouseClickPointOnScreen(MouseButtonEventArgs e)
+        {
+            var position = e.MouseDevice.GetPosition(RenderTarget);
+            var mouseClickPointOnScreen = RenderTarget.PointToScreen(position);
+            return mouseClickPointOnScreen;
+        }
+
+        private int GetTargetHeight()
+        {
+            var topLeft = RenderTarget.PointToScreen(new System.Windows.Point(0, 0));
+
+            var bottomRight = RenderTarget.PointToScreen(new System.Windows.Point(RenderTarget.ActualWidth, RenderTarget.ActualHeight));
+
+            return (int)bottomRight.Y - (int)topLeft.Y;
+        }
+
+        private int GetTargetWidth()
+        {
+            var topLeft = RenderTarget.PointToScreen(new System.Windows.Point(0, 0));
+
+            var bottomRight = RenderTarget.PointToScreen(new System.Windows.Point(RenderTarget.ActualWidth, RenderTarget.ActualHeight));
+
+            return (int)bottomRight.X - (int)topLeft.X;
+        }
+
+        private PointD ScreenPointToCoordinatePoint(System.Windows.Point screenPoint)
+        {
+            var topLeft = RenderTarget.PointToScreen(new System.Windows.Point(0, 0));
+
+            var bottomRight = RenderTarget.PointToScreen(new System.Windows.Point(RenderTarget.ActualHeight, RenderTarget.ActualWidth));
+            return new PointD();
         }
     }
 }

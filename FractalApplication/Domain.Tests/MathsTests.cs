@@ -50,5 +50,19 @@
             intRange.First().Should().Be(Start);
             intRange.Last().Should().Be(End);
         }
+
+        [TestMethod]
+        public void TestFloatRangeWithThreeValues()
+        {
+            var steps = 3;
+            var start = 1f;
+            var end = 3f;
+
+            var floatRange = Maths.FloatRange(steps, start, end);
+            floatRange.Length.Should().Be(steps);
+            floatRange[0].Should().Be(start);
+            floatRange[2].Should().Be(end);
+            floatRange[1].Should().Be(2f);
+        }
     }
 }
